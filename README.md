@@ -5,14 +5,14 @@ Report by ***Yoav Zimmerman*** for EDAN20 Fall 2014
 Introduction
 ------------
 
-Last week, we used manual rules to attempt to chunk a CoNLL 2000 dataset. Although this enabled us to achieve a reasonable F1 score of approximately 78, we can do better. This week, we will use machine learning techniques to chunk the same dataset and achieve a higher F1 score.
+Last week, we used manual rules to attempt to chunk a CoNLL 2000 dataset. Although this enabled us to achieve a reasonable F1 score, we like to achieve better precision and recall. This week, we will use machine learning techniques to chunk the CoNLL2000 dataset and achieve a higher F1 score.
 
 Baseline
 --------
 
 The first task whenever working with a machine learning is to identify a **baseline**, or the application of a minimal techinque. The baseline can then be used as a relative measure to compare with further experiments. For this particular problem, CoNLL2000 obtained a baseline result by selecting the chunk tag which was most frequently associated with the part of speech tag for every word. This is the absolute minimal technique we can use as a chunk classifier, so it seems reasonable to use as a baseline.
 
-For the implementation, a `BLChunkerInstance` skeleton class was supplied. The code written to complete it iterated through every word in the dataset counted the frequency of each PPoS-Chunk pair in a hashmap. Then, all that is left to do is iterate through every unique PPoS and find the chunk that corresponds to the highest occurence together with the PPoS. The following are the results of the baseline experiment:
+For the implementation, a `BLChunker` skeleton class was supplied. The code written to complete it iterated through every word in the dataset and counted the frequency of each PPoS-Chunk pair in a hashmap. Then, all that was left to do was iterate through every unique PPoS and find the chunk that corresponds to the highest occurence together with the PPoS. The following are the results of the baseline experiment after implementation:
 
 ```bash
 $ ./eval.sh test.txt test_pred.txt
@@ -30,7 +30,7 @@ accuracy:  77.29%; precision:  72.58%; recall:  82.14%; FB1:  77.07
                VP: precision:  60.53%; recall:  74.22%; FB1:  66.68  5711
 ```
 
-As we can see, we have already achieved a modest 77.01 F1 score from the most minimal technique. Not bad!
+As we can see, we have already achieved a modest F1 score of **77.01** (nearly the same as our highest score last week) from the most minimal machine learning technique. Not bad!
 
 Replicating Baseline
 --------------------
@@ -62,7 +62,7 @@ NN, I-NP
 ...
 ```
 
-The Weka GUI interface was then used to generate a decision tree model using the built-in J48 algorithm. Now that a model file was generated, the `MLChunker.java` and `WekaGlue.java` programs were run to tag the test set according to the model. The eval script was run once more and returned an F1 score of 77.07, the exact same as when we tagged the test set in Java manually. We may conclude that we have successfully replicated the baseline in Weka.
+The Weka GUI interface was then used to generate a decision tree model using the built-in J48 algorithm. Now that a model file was generated, the `MLChunker.java` and `WekaGlue.java` programs were run to tag the test set according to the model. The eval script was run once more and returned an F1 score of **77.01**, the exact same as when we tagged the test set in Java manually. We may conclude that we have successfully replicated the baseline in Weka.
 
 Using more features
 -------------------
@@ -93,7 +93,7 @@ NN, VBZ, RB, B-VP
 ...
 ```
 
-To simplify things, the first and last "border" words the dataset were left out of the ARFF file. Similarly to the process above, the Weka GUI was used to generate a decision tree model using the J48 algorithm. Finally, after slightly modifying the `MLChunker.java` program to tag each word on all three features, the test set was tagged using the generated model. The results are displayed below:
+To simplify things, the first and last "border" words the dataset were left out of the ARFF file. Next, the Weka GUI was used to generate a decision tree model using the J48 algorithm. Finally, after slightly modifying the `MLChunker.java` program to tag each word on all three features, the test set was tagged using the generated model. The results are displayed below:
 
 ```bash
 $ ./eval.sh test.txt test_pred.txt
@@ -111,4 +111,4 @@ accuracy:  92.43%; precision:  85.73%; recall:  88.68%; FB1:  87.18
                VP: precision:  89.04%; recall:  92.08%; FB1:  90.53  4817
 ```
 
-Using an only slightly more complex model, an excellent F1 score of 87.18 was achieved. These results are better than could likely ever be achieved using the manual grammar rules method of last week. Furthermore, they could be improved with only a little bit more work. The feature vector can be expanded to include more parts of speech, previous chunk tags, and even the word strings themselves.
+Using an only slightly more complex model, a highly improved F1 score of **87.18** was achieved. These results are better than one could ever likely be achieve using the manual grammar rules method of last week. Furthermore, the score could be improved with only a little bit more work. The feature vector can be expanded to include more parts of speech, previous chunk tags, and even the word strings themselves.
