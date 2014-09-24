@@ -4,3 +4,4 @@ spec
 *.swp
 *.class
 .svn/
+*.pdf
